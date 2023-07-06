@@ -34,12 +34,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
         buttonsContainer.innerHTML = '';
         clearButton.style.display = 'none';
         switchImage('teyvat.png'); // Display default image
+        deleteSelectedAreaAndTimer()
+        map.removeControl(drawControl);
     });
 
     function switchImage(fileName) {
         //const imagePath = `maps/${fileName}`; // Assuming images are in a folder named "maps"
         var image = L.imageOverlay(`maps/${fileName}`, bounds).addTo(map);
+        deleteSelectedAreaAndTimer()
+        if (fileName != 'teyvat.png') {
+            map.addControl(drawControl);
+        }
     }
 
     switchImage('teyvat.png'); // Display default image on page load
+
 });

@@ -43,3 +43,13 @@ button {
 #clearButton {
     display: none;
 }
+
+.countdown-overlay {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    z-index: 1000;
+    /* Set a higher z-index value */
+}
