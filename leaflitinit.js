@@ -1,16 +1,18 @@
+// List of image file names
+const imageFiles = ['jueyun chili.png', 'sea ganoderma.png', 'shrine of depths.png', 'treasure hoarder.png']; // Will add these to a JSON later
+
+// Initialize image map
 var map = L.map('map', {
     crs: L.CRS.Simple,
     minZoom: -5
 });
-var bounds = [[0, 0], [1000, 1960]];
-var image = L.imageOverlay('maps/map1.png', bounds).addTo(map);
+var bounds = [[0, 0], [648, 790]];
+var image = L.imageOverlay('maps/teyvat.png', bounds).addTo(map);
 map.fitBounds(bounds);
-
 
 // Add the draw control to the map
 var drawnItems = new L.FeatureGroup();
 map.addLayer(drawnItems);
-
 var drawControl = new L.Control.Draw({
     draw: {
         polygon: true,
@@ -25,7 +27,6 @@ var drawControl = new L.Control.Draw({
     }
 });
 map.addControl(drawControl);
-
 map.on('draw:created', function (e) {
     var layer = e.layer;
     drawnItems.addLayer(layer);
@@ -33,3 +34,4 @@ map.on('draw:created', function (e) {
     var latLngs = layer.getLatLngs();
     console.log(latLngs);
 });
+

@@ -9,14 +9,21 @@
 </head>
 
 <body>
-    <h1>Genshin Respawns</h1>
     <div class="container">
-        <input type="text" id="searchBar" placeholder="Search...">
-        <div id="buttonContainer"></div>
+        <h1>Genshin Respawns</h1>
+        <div class="searchContainer">
+            <input type="text" id="searchBar" placeholder="Search...">
+
+            <button id="clearButton">Clear</button>
+        </div>
     </div>
+    <div id="buttonContainer"></div>
     <div id="map"></div>
+    </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet-draw/dist/leaflet.draw.js"></script>
-    <script src="script.js"></script>
+
+    <script src="leaflitinit.js"></script>
+    <script src="buttonsearch.js"></script>
 </body>

@@ -2,3 +2,44 @@
     height: 700px;
 
 }
+
+.container {
+    text-align: center;
+    margin-top: 10px;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+.searchContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    width: 400px;
+    /* Fixed width for the search container */
+    margin-left: auto;
+    /* Add this line to center the search container */
+    margin-right: auto;
+    /* Add this line to center the search container */
+}
+
+input[type="text"] {
+    height: 30px;
+    font-size: 16px;
+    padding: 5px;
+    flex: 1;
+    /* Allow the input to grow and take available space */
+    margin-bottom: 10px;
+}
+
+button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    font-size: 16px;
+}
+
+#clearButton {
+    display: none;
+}
