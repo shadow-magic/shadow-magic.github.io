@@ -7,6 +7,7 @@
 4. Store region and time cookies
 5. Make regions and time session persistent (may be related to 4)
 6. Allow more than one region timer at a time
-7. ~~Make search bar functional and add clear button~~ that hides non-starred buttons and ~~deletes selected and timer~~
-8. ~~Add countdown timers~~
-9. ~~Dynamically created buttons named after files~~
+7. Add different timers for each plant/enemy/etc
+8. ~~Make search bar functional and add clear button~~ that hides non-starred buttons and ~~deletes selected and timer~~
+9. ~~Add countdown timers~~
+10. ~~Dynamically created buttons named after files~~
