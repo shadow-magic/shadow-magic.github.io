@@ -40,7 +40,7 @@ var drawControl = new L.Control.Draw({
 //map.addControl(drawControl);
 map.on('draw:created', function (e) {
     layer = e.layer;
-    layer.setStyle({ color: 'white', fillOpacity: 0.5 });
+    layer.setStyle({ color: 'white', fillOpacity: 0.75 });
     drawnItems.addLayer(layer);
     layer.options.className = 'selected-area';
     CountdownTimer();
@@ -58,13 +58,11 @@ let countdownSeconds; // Adjust the countdown duration as needed
 var countdownOverlay;
 async function CountdownTimer() {
     countdownSeconds = await fetchCategory(currentMap);
-    console.log(countdownSeconds);
     // Create a custom Leaflet overlay for the countdown timer
     var CountdownOverlay = L.Layer.extend({
         onAdd: function (map) {
             this._map = map;
-            this._container = L.DomUtil.create('div', 'countdown-overlay');
-            console.log(this._container, typeof this._container);
+            this._container = L.DomUtil.create('div', 'center');
             this._updatePosition();
             this._map.getPanes().overlayPane.appendChild(this._container);
             this._updateTimer();
@@ -98,7 +96,6 @@ async function CountdownTimer() {
 
     countdownOverlay = new CountdownOverlay();
     countdownOverlay._layer = layer;
-    console.log(layer, typeof layer);
     map.addLayer(countdownOverlay);
     map.on('move', function () {
         if (countdownOverlay && countdownOverlay._map) {
@@ -117,7 +114,6 @@ async function CountdownTimer() {
                 countdownOverlay._updateTimer();
             }
         } else {
-            console.log('defined');
             clearInterval(countdownInterval);
             if (countdownOverlay) { // Check if countdownOverlay is defined
                 countdownOverlay._updateTimer();

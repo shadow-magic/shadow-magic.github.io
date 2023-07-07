@@ -47,7 +47,7 @@ button {
 
 
 
-.countdown-overlay {
+.center {
     position: absolute;
     top: 0;
     left: 0;
@@ -56,4 +56,5 @@ button {
     font-size: 16px;
     font-weight: bold;
     z-index: 1000;
+    /*why isn't this centered??*/
 }

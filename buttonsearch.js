@@ -10,13 +10,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
         if (searchValue !== '') {
             // Perform search and create buttons
-            fetch('maps.json')
+            fetch('times.json')
                 .then(response => response.json())
                 .then(data => {
+                    var list = Object.keys(data).reduce(function (result, key) {
+                        return result.concat(data[key]);
+                    }, []);
                     // Do something with the retrieved data
-                    var imageMatrix = data.imageFiles;
-                    const filteredFiles = imageMatrix.filter(file => file.toLowerCase().includes(searchValue));
-
+                    console.log(data, typeof data);
+                    const filteredFiles = list.filter(file => file.toLowerCase().includes(searchValue));
+                    console.log(filteredFiles);
                     filteredFiles.forEach(file => {
                         const fileName = file.replace(/\.[^/.]+$/, ''); // Remove file extension
                         const button = document.createElement('button');
