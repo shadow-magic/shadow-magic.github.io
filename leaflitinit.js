@@ -1,6 +1,18 @@
-// List of image file names
-const imageFiles = ['jueyun chili.png', 'sea ganoderma.png', 'shrine of depths.png', 'treasure hoarder.png']; // Will add these to a JSON later
 // Initialize image map
+let currentMap;
+let layer;
+function deleteSelectedAreaAndTimer() {
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+    }
+
+    if (countdownOverlay) {
+        map.removeLayer(countdownOverlay);
+        countdownOverlay = null;
+    }
+
+    drawnItems.clearLayers();
+}
 var map = L.map('map', {
     crs: L.CRS.Simple,
     minZoom: -5
@@ -27,60 +39,58 @@ var drawControl = new L.Control.Draw({
 });
 //map.addControl(drawControl);
 map.on('draw:created', function (e) {
-    var layer = e.layer;
+    layer = e.layer;
+    layer.setStyle({ color: 'white', fillOpacity: 0.5 });
     drawnItems.addLayer(layer);
-    drawnItems.clearLayers();
     layer.options.className = 'selected-area';
-    startCountdownTimer();
-    // Perform actions with the selected area, e.g., get its coordinates
+    CountdownTimer();
+    // Perform actions with the selected area, e.g., get its coordinates for cookie
     var latLngs = layer.getLatLngs();
-    console.log(latLngs);
+    //console.log(latLngs);
 });
 
 // Countdown timer logic
 // Create a custom Leaflet control for the countdown timer
 var countdownInterval;
 var countdownElement = document.getElementById('countdown-timer');
-var countdownSeconds = 60; // Adjust the countdown duration as needed
-
-// Create a custom Leaflet overlay for the countdown timer
-var CountdownOverlay = L.Layer.extend({
-    onAdd: function (map) {
-        this._map = map;
-        this._container = L.DomUtil.create('div', 'countdown-overlay');
-        this._updatePosition();
-        this._map.getPanes().overlayPane.appendChild(this._container);
-        this._updateTimer();
-        this._timerInterval = setInterval(this._updateTimer.bind(this), 1000);
-    },
-
-    onRemove: function (map) {
-        map.getPanes().overlayPane.removeChild(this._container);
-        clearInterval(this._timerInterval);
-    },
-
-    _updatePosition: function () {
-        var bounds = this._layer.getBounds();
-        var topLeft = this._map.latLngToLayerPoint(bounds.getNorthWest());
-        L.DomUtil.setPosition(this._container, topLeft);
-    },
-
-    _updateTimer: function () {
-        if (countdownSeconds > 0) {
-            this._container.textContent = 'Time Remaining: ' + countdownSeconds + 's';
-        } else {
-            this._container.textContent = 'Countdown Finished!';
-        }
-    }
-});
-
+let countdownSeconds; // Adjust the countdown duration as needed
 // Initialize the countdown overlay
 var countdownOverlay;
+async function CountdownTimer() {
+    countdownSeconds = await fetchCategory(currentMap);
+    console.log(countdownSeconds);
+    // Create a custom Leaflet overlay for the countdown timer
+    var CountdownOverlay = L.Layer.extend({
+        onAdd: function (map) {
+            this._map = map;
+            this._container = L.DomUtil.create('div', 'countdown-overlay');
+            console.log(this._container, typeof this._container);
+            this._updatePosition();
+            this._map.getPanes().overlayPane.appendChild(this._container);
+            this._updateTimer();
+            this._timerInterval = setInterval(this._updateTimer.bind(this), 1000);
+        },
 
-map.on(L.Draw.Event.CREATED, function (event) {
-    var layer = event.layer;
-    drawnItems.clearLayers();
-    drawnItems.addLayer(layer);
+        onRemove: function (map) {
+            map.getPanes().overlayPane.removeChild(this._container);
+            clearInterval(this._timerInterval);
+        },
+
+        _updatePosition: function () {
+            var bounds = this._layer.getBounds();
+            var topLeft = this._map.latLngToLayerPoint(bounds.getNorthWest());
+            L.DomUtil.setPosition(this._container, topLeft);
+        },
+
+        _updateTimer: function () {
+            if (countdownSeconds > 0) {
+                this._container.textContent = 'Time Remaining: ' + countdownSeconds + 's';
+            } else {
+                this._container.textContent = 'Countdown Finished!';
+                //deleteSelectedAreaAndTimer(); write logic to delete specific regions
+            }
+        }
+    });
 
     if (countdownOverlay) {
         map.removeLayer(countdownOverlay);
@@ -88,43 +98,52 @@ map.on(L.Draw.Event.CREATED, function (event) {
 
     countdownOverlay = new CountdownOverlay();
     countdownOverlay._layer = layer;
+    console.log(layer, typeof layer);
     map.addLayer(countdownOverlay);
-});
+    map.on('move', function () {
+        if (countdownOverlay && countdownOverlay._map) {
+            countdownOverlay._updatePosition();
+        }
+    });
 
-map.on('move', function () {
-    if (countdownOverlay && countdownOverlay._map) {
-        countdownOverlay._updatePosition();
+    function startCountdownTimer() {
+        countdownInterval = setInterval(updateCountdownTimer, 1000);
     }
-});
 
-function startCountdownTimer() {
-    countdownInterval = setInterval(updateCountdownTimer, 1000);
+    function updateCountdownTimer() {
+        if (countdownSeconds > 0) {
+            countdownSeconds--;
+            if (countdownOverlay) { // Check if countdownOverlay is defined
+                countdownOverlay._updateTimer();
+            }
+        } else {
+            console.log('defined');
+            clearInterval(countdownInterval);
+            if (countdownOverlay) { // Check if countdownOverlay is defined
+                countdownOverlay._updateTimer();
+            }
+        }
+    }
+    startCountdownTimer();
 }
+async function fetchCategory(stringToFind) {
+    try {
+        const response = await fetch('times.json'); // Fetch the JSON data from the file
+        const jsonData = await response.json(); // Parse the JSON data
 
-function updateCountdownTimer() {
-    if (countdownSeconds > 0) {
-        countdownSeconds--;
-        countdownOverlay._updateTimer();
-    } else {
-        clearInterval(countdownInterval);
-        countdownOverlay._updateTimer();
+        // Loop through each category in the JSON data
+        for (const category in jsonData) {
+            if (jsonData.hasOwnProperty(category)) {
+                // Check if the string is present in the current category
+                if (jsonData[category].includes(stringToFind)) {
+                    return category; // Return the category if found
+                }
+            }
+        }
+
+        // Return null if the string is not found in any category
+        return null;
+    } catch (error) {
+        console.error('Error fetching data:', error);
     }
 }
-
-// Set the initial countdown seconds
-var countdownSeconds = 60;
-
-// Define a function to delete the selected area and timer
-function deleteSelectedAreaAndTimer() {
-    if (countdownInterval) {
-        clearInterval(countdownInterval);
-    }
-
-    if (countdownOverlay) {
-        map.removeLayer(countdownOverlay);
-        countdownOverlay = null;
-    }
-
-    drawnItems.clearLayers();
-}
-
