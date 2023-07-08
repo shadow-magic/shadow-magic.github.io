@@ -17,9 +17,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         return result.concat(data[key]);
                     }, []);
                     // Do something with the retrieved data
-                    console.log(data, typeof data);
+                    //console.log(data, typeof data);
                     const filteredFiles = list.filter(file => file.toLowerCase().includes(searchValue));
-                    console.log(filteredFiles);
+                    //console.log(filteredFiles);
                     filteredFiles.forEach(file => {
                         const fileName = file.replace(/\.[^/.]+$/, ''); // Remove file extension
                         const button = document.createElement('button');
@@ -49,7 +49,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         buttonsContainer.innerHTML = '';
         clearButton.style.display = 'none';
         switchImage('teyvat.png'); // Display default image
-        deleteSelectedAreaAndTimer()
+        deleteSelectedAreaAndTimer();
         map.removeControl(drawControl);
     });
 
@@ -61,6 +61,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             map.addControl(drawControl);
         }
         currentMap = fileName;
+        // Load the drawn layers from the cookie
+        loadDrawnLayersFromCookie();
     }
 
     switchImage('teyvat.png'); // Display default image on page load
