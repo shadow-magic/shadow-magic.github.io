@@ -4,6 +4,5 @@
 
 ### To Do
 - [X] deleted everything and rewrote it. lol
-- [ ] Write CSS
+- [X] Write CSS & HTML
 - [ ] Rewrite moving countdown overlay
-- [ ]
