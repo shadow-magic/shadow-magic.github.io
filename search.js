@@ -1,6 +1,7 @@
 //adds favorited (all) and previously visted (3?) buttons. upon typing replace both (or only previously visited?) with filtered buttons
 const searchBar = document.getElementById('searchBar');
 const buttonContainer = document.getElementById('buttonContainer');
+const clearButton = document.getElementById('clearButton');
 function search(obj) {
     function getAllValues(object) {
         for (let key in object) {

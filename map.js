@@ -8,18 +8,20 @@ const image = L.imageOverlay('maps/teyvat.png', bounds).addTo(map);
 const drawnItems = new L.FeatureGroup().addTo(map);
 const drawControl = new L.Control.Draw({
     edit: {
-        featureGroup: drawnItems
+        featureGroup: drawnItems,
     }
 });
 map.fitBounds(bounds);
-function switchMap(file) {
+function switchMap(file, respawnHours) {
     if (currentMap !== file) {
+        //console.log(currentMap, file);
         currentMap = file;
         //switch map
         const image = L.imageOverlay(`maps/${file}`, bounds).addTo(map);
         //check for existing cookies. if they do, draw layers. pass countdowns to countdownOverlay
 
         //show respawn time at top right
-
+        const timeToRespawnBox = document.getElementById('respawnHours');
+        if (currentMap !== 'teyvat.png') { timeToRespawnBox.innerHTML = 'Respawn Hours:' + respawnHours; } else { timeToRespawnBox.innerHTML = ''; }
     } else { }
 }
