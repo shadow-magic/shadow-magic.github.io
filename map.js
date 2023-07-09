@@ -2,6 +2,7 @@
 let map = L.map('map', {
     crs: L.CRS.Simple
 });
+let timeToRespawnBox = document.getElementById('respawnHours');
 let currentMap;
 const bounds = [[0, 0], [648, 790]];
 const image = L.imageOverlay('maps/teyvat.png', bounds).addTo(map);
@@ -21,7 +22,6 @@ function switchMap(file, respawnHours) {
         //check for existing cookies. if they do, draw layers. pass countdowns to countdownOverlay
 
         //show respawn time at top right
-        const timeToRespawnBox = document.getElementById('respawnHours');
-        if (currentMap !== 'teyvat.png') { timeToRespawnBox.innerHTML = 'Respawn Hours:' + respawnHours; } else { timeToRespawnBox.innerHTML = ''; }
+        if (currentMap !== 'teyvat.png') { timeToRespawnBox.style.display = "block"; timeToRespawnBox.innerHTML = 'Respawn Hours:' + respawnHours; } else { timeToRespawnBox.style.display = "none"; }
     } else { }
 }

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html>
 
 <head>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -9,12 +10,18 @@
 </head>
 
 <body>
-    <h1>Genshin Respawns</h1>
-    <input type="text" id="searchBar" placeholder="Search...">
-    <button id="clearButton">Clear</button>
-    <div id="buttonContainer"></div>
-    <div id="map"></div>
-    <div id="respawnHours"></div>
+    <div class="container">
+        <h1>Genshin Respawns</h1>
+        <div class="searchContainer">
+            <input type="text" id="searchBar" placeholder="Search...">
+            <button id="clearButton">Clear</button>
+        </div>
+        <div id="buttonContainer"></div>
+        <div class="mapContainer">
+            <div id="map"></div>
+            <div id="respawnHours"></div>
+        </div>
+    </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet-draw/dist/leaflet.draw.js"></script>
@@ -22,7 +29,8 @@
     <script src="cookie.js"></script>
     <script src="countdown.js"></script>
     <script src="map.js"></script>
-
     <script src="search.js"></script>
     <script src="main.js"></script>
 </body>
+
+</html>
