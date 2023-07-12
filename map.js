@@ -13,7 +13,7 @@ const drawControl = new L.Control.Draw({
         polygon: true,
         circle: true,
         circlemarker: false,
-        marker: false
+        marker: true
     },
     edit: {
         featureGroup: drawnItems,
