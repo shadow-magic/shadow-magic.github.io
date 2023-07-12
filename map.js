@@ -8,6 +8,13 @@ const bounds = [[0, 0], [648, 790]];
 const image = L.imageOverlay('maps/teyvat.png', bounds).addTo(map);
 const drawnItems = new L.FeatureGroup().addTo(map);
 const drawControl = new L.Control.Draw({
+    draw: {
+        polyline: false,
+        polygon: true,
+        circle: true,
+        circlemarker: false,
+        marker: false
+    },
     edit: {
         featureGroup: drawnItems,
     }
