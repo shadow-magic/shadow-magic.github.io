@@ -13,11 +13,12 @@ function search(obj) {
     }
     buttonContainer.innerHTML = ""; // Clear previous buttons
     const searchTerm = searchBar.value.toLowerCase();
-    function addButton(buttonName, key) {
-        if (buttonName.toLowerCase().includes(searchTerm)) {
+    function addButton(fileName, key) {
+        if (fileName.toLowerCase().includes(searchTerm)) {
             const button = document.createElement("button");
-            button.textContent = capitalizeAndRemoveExtension(buttonName);
-            button.setAttribute('hours', key)
+            button.textContent = capitalizeAndRemoveExtension(fileName);
+            button.setAttribute('fileName', fileName);
+            button.setAttribute('hours', key);
             buttonContainer.appendChild(button);
         }
     }

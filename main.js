@@ -24,7 +24,7 @@ async function e() {
 }
 function buttonClicked(e) {
     hours = parseInt(e.target.getAttribute('hours'));
-    switchMap(e.target.textContent, hours);
+    switchMap(e.target.getAttribute('fileName'), hours);
     map.addControl(drawControl);
     const cookieData = Cookies.get();
     if (Object.keys(cookieData).length !== 0) {//need to change this logic
@@ -43,13 +43,6 @@ function emptiedSearch() {
     buttonContainer.innerHTML = '';
     map.removeControl(drawControl);
     drawnItems.clearLayers();
-    // deletes timers
-    for (let id in timers) {
-        if (timers.hasOwnProperty(id)) {
-            map.removeLayer(timers[id].tooltip);
-            clearInterval(timers[id].interval);
-            delete timers[id];
-        }
-    }
+    deleteTimers();
 }
 e();

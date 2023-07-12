@@ -17,9 +17,17 @@ function switchMap(file, respawnHours) {
     if (currentMap !== file) {
         currentMap = file;
         drawnItems.clearLayers();
-        //switch map
+        deleteTimers();
         const image = L.imageOverlay(`maps/${file}`, bounds).addTo(map);
-        //show respawn time at top right
         timeToRespawnBox.innerHTML = 'Respawn Hours:' + respawnHours;
-    } else { }
+    }
+}
+function deleteTimers() {    // deletes timers
+    for (let id in timers) {
+        if (timers.hasOwnProperty(id)) {
+            map.removeLayer(timers[id].tooltip);
+            clearInterval(timers[id].interval);
+            delete timers[id];
+        }
+    }
 }
