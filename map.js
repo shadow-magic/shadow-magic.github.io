@@ -18,10 +18,7 @@ function switchMap(file, respawnHours) {
         currentMap = file;
         drawnItems.clearLayers();
         //switch map
-
         const image = L.imageOverlay(`maps/${file}`, bounds).addTo(map);
-        //check for existing cookies. if they do, draw layers. pass countdowns to countdownOverlay
-
         //show respawn time at top right
         timeToRespawnBox.innerHTML = 'Respawn Hours:' + respawnHours;
     } else { }

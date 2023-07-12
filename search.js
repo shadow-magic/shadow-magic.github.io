@@ -16,10 +16,15 @@ function search(obj) {
     function addButton(buttonName, key) {
         if (buttonName.toLowerCase().includes(searchTerm)) {
             const button = document.createElement("button");
-            button.textContent = buttonName;
+            button.textContent = capitalizeAndRemoveExtension(buttonName);
             button.setAttribute('hours', key)
             buttonContainer.appendChild(button);
         }
     }
     getAllValues(obj);
+}
+function capitalizeAndRemoveExtension(filename) {
+    const capitalized = filename.replace(/\..+$/, '')
+        .replace(/(^|\s)\S/g, c => c.toUpperCase());
+    return capitalized;
 }
