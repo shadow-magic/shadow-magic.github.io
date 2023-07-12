@@ -15,13 +15,14 @@ const drawControl = new L.Control.Draw({
 map.fitBounds(bounds);
 function switchMap(file, respawnHours) {
     if (currentMap !== file) {
-        //console.log(currentMap, file);
         currentMap = file;
+        drawnItems.clearLayers();
         //switch map
+
         const image = L.imageOverlay(`maps/${file}`, bounds).addTo(map);
         //check for existing cookies. if they do, draw layers. pass countdowns to countdownOverlay
 
         //show respawn time at top right
-        if (currentMap !== 'teyvat.png') { timeToRespawnBox.style.display = "block"; timeToRespawnBox.innerHTML = 'Respawn Hours:' + respawnHours; } else { timeToRespawnBox.style.display = "none"; }
+        timeToRespawnBox.innerHTML = 'Respawn Hours:' + respawnHours;
     } else { }
 }

@@ -8,22 +8,25 @@ async function e() {
     map.on('draw:created', (e) => {
         const layer = e.layer;
         drawnItems.addLayer(layer);
-        //start countdown overlay
-        saveCookie(hours, drawnItems, currentMap);
+        timerOverlay(dateIn(hours), layer._leaflet_id);
+        saveCookie(hours, layer, currentMap);
     });
 }
 function buttonClicked(e) {
-    hours = e.target.getAttribute('hours');
+    hours = parseInt(e.target.getAttribute('hours'));
     switchMap(e.target.textContent, hours);
     map.addControl(drawControl);
-    const cookieData = Cookies.get('mapData');
-    if (cookieData) {//need to change this logic
-        const [drawnLayer, map, hours, minutes] = getCookie(cookieData);
-        //console.log(drawnLayer, map, hours, minutes);
-        if (currentMap == map) {
-            drawnItems.addLayer(drawnLayer);
+    const cookieData = Cookies.get();
+    if (Object.keys(cookieData).length !== 0) {//need to change this logic
+        arrayOfArrays = getCookie(cookieData);
+        for (array in arrayOfArrays) {
+            [layer, cookieMap, futureDate] = arrayOfArrays[array];
+            if (cookieMap == currentMap) {
+                drawnItems.addLayer(layer);
+                timerOverlay(futureDate, layer._leaflet_id);
+            }
         }
     }
 }
-function emptiedSearch() { switchMap('teyvat.png'); buttonContainer.innerHTML = ''; map.removeControl(drawControl); drawnItems.clearLayers(); }
+function emptiedSearch() { switchMap('teyvat.png', ''); buttonContainer.innerHTML = ''; map.removeControl(drawControl); drawnItems.clearLayers(); }
 e();
