@@ -45,7 +45,7 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 #buttonContainer button {
@@ -69,17 +69,18 @@ h1 {
 #map {
     width: 100%;
     height: 100%;
+    z-index: 1;
 }
 
 #respawnHours {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 20px;
+    right: 20px;
     background-color: white;
     padding: 10px;
     border-radius: 5px;
     display: none;
-
+    z-index: 2;
 }
 
 #respawnHoursText {
