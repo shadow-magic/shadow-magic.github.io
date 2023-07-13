@@ -1,6 +1,9 @@
 let hours;
 let mayType = true;
 let fileName;
+window.addEventListener('DOMContentLoaded', function () {
+    searchBar.focus();
+});
 async function e() {
     const times = await fetch('times.json');
     const obj = await times.json();
