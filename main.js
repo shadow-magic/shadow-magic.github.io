@@ -9,7 +9,7 @@ async function e() {
     const obj = await times.json();
     searchBar.addEventListener("input", () => { if (searchBar.value !== '') { search(obj); } else { emptiedSearch(); } });
     clearButton.addEventListener("click", () => { searchBar.value = ''; emptiedSearch(); });
-    buttonContainer.addEventListener("click", (e) => { if (e.target.textContent !== currentMap) { buttonClicked(e); } });
+    buttonContainer.addEventListener("click", (e) => { if (e.target.getAttribute('fileName') !== null && e.target.getAttribute('fileName') !== currentMap) { buttonClicked(e); } });
     map.on('draw:created', (e) => {
         const layer = e.layer;
         drawnItems.addLayer(layer);
