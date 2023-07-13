@@ -11,8 +11,15 @@ body {
 }
 
 h1 {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-size: 20x;
+}
+
+p {
+    margin: 5px;
+    font-style: italic;
+    font-size: 15px;
 }
 
 .searchContainer {
@@ -87,7 +94,7 @@ h1 {
     display: inline-block
 }
 
-img {
+.fa-brands.fa-github.fa-2xl {
     position: fixed;
     right: 20px;
     bottom: 20px;

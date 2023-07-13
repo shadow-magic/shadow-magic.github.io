@@ -7,22 +7,43 @@ function search(obj) {
         for (let key in object) {
             if (Array.isArray(object[key])) {
                 const array = object[key];
-                array.forEach((map) => { addButton(map, key) });
+                array.forEach((map) => { console.log(key, map); addButton(map, key) });
             }
         }
     }
     buttonContainer.innerHTML = ""; // Clear previous buttons
-    const searchTerm = searchBar.value.toLowerCase();
-    function addButton(fileName, key) {
-        if (fileName.toLowerCase().includes(searchTerm)) {
-            const button = document.createElement("button");
-            button.textContent = capitalizeAndRemoveExtension(fileName);
-            button.setAttribute('fileName', fileName);
-            button.setAttribute('hours', key);
-            buttonContainer.appendChild(button);
+    getAllValues(obj);
+}
+function showVisited(obj) {
+    // buttons (maps) with cookie data are displayed when search bar is empty (cleared)
+    const cookieData = Cookies.get();
+    if (Object.keys(cookieData).length !== 0) {
+        arrayOfArrays = getCookie(cookieData);
+        for (array in arrayOfArrays) {
+            [layer, cookieMap, futureDate] = arrayOfArrays[array];
+            function getAllValues(object) {
+                for (let key in object) {
+                    if (Array.isArray(object[key])) {
+                        const array = object[key];
+                        array.forEach((map) => { if (map == cookieMap) { addButton(cookieMap, key, 'fa-regular fa-clock') } });
+                    }
+                }
+            }
+            getAllValues(obj);
         }
     }
-    getAllValues(obj);
+}
+function addButton(fileName, hours, iconClass) {
+    const searchTerm = searchBar.value.toLowerCase();
+    if (fileName.toLowerCase().includes(searchTerm)) {
+        const button = document.createElement("button");
+        if (iconClass !== undefined) { const icon = document.createElement('i'); icon.className = iconClass; button.appendChild(icon); }
+        const text = document.createTextNode(' ' + capitalizeAndRemoveExtension(fileName));
+        button.appendChild(text);
+        button.setAttribute('fileName', fileName);
+        button.setAttribute('hours', hours);
+        buttonContainer.appendChild(button);
+    }
 }
 function capitalizeAndRemoveExtension(filename) {
     const capitalized = filename.replace(/\..+$/, '')
