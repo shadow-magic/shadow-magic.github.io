@@ -10,22 +10,27 @@
 </head>
 
 <body>
-    <div class="container">
-        <h1>Genshin Respawns</h1>
-        <div class="searchContainer">
-            <input type="text" id="searchBar" placeholder="Search...">
-            <button id="clearButton">Clear</button>
-        </div>
-        <div id="buttonContainer"></div>
-        <div class="mapContainer">
-            <div id="map"></div>
-            <div id="respawnHours"></div>
+
+    <h1>Genshin Respawns</h1>
+    <div class="searchContainer">
+        <input type="text" id="searchBar" placeholder="Search...">
+        <button id="clearButton">Clear</button>
+    </div>
+    <div id="buttonContainer"></div>
+    <div class="mapContainer">
+        <div id="map"></div>
+        <div id="respawnHours">
+            <div id="respawnHoursText"></div>
         </div>
     </div>
+
+    <a href="https://github.com/shadow-magic/shadow-magic.github.io"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c2/GitHub_Invertocat_Logo.svg"></a>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet-draw/dist/leaflet.draw.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
     <script src="cookie.js"></script>
     <script src="timer.js"></script>
     <script src="map.js"></script>

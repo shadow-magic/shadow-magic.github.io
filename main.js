@@ -1,4 +1,6 @@
 let hours;
+let mayType = true;
+let fileName;
 async function e() {
     const times = await fetch('times.json');
     const obj = await times.json();
@@ -23,26 +25,57 @@ async function e() {
     */
 }
 function buttonClicked(e) {
-    hours = parseInt(e.target.getAttribute('hours'));
-    switchMap(e.target.getAttribute('fileName'), hours);
-    map.addControl(drawControl);
-    const cookieData = Cookies.get();
-    if (Object.keys(cookieData).length !== 0) {//need to change this logic
-        arrayOfArrays = getCookie(cookieData);
-        for (array in arrayOfArrays) {
-            [layer, cookieMap, futureDate] = arrayOfArrays[array];
-            if (cookieMap == currentMap) {
-                drawnItems.addLayer(layer);
-                timerOverlay(futureDate, layer);
+    fileName = e.target.getAttribute('fileName');
+    if (fileName !== currentMap) {
+        hours = parseInt(e.target.getAttribute('hours'));
+        switchMap(fileName);
+        map.addControl(drawControl);
+        const cookieData = Cookies.get();
+        if (Object.keys(cookieData).length !== 0) {
+            arrayOfArrays = getCookie(cookieData);
+            for (array in arrayOfArrays) {
+                [layer, cookieMap, futureDate] = arrayOfArrays[array];
+                if (cookieMap == currentMap) {
+                    drawnItems.addLayer(layer);
+                    timerOverlay(futureDate, layer);
+                }
             }
         }
+        typed(fileName);
     }
 }
 function emptiedSearch() {
     switchMap('teyvat.png', '');
+    typed();
     buttonContainer.innerHTML = '';
     map.removeControl(drawControl);
     drawnItems.clearLayers();
     deleteTimers();
+}
+function typed(file) {
+    console.log(file, currentMap);
+    if (currentMap !== 'teyvat.png' && mayType) {
+        timeToRespawnBox.style.display = 'block';
+        mayType = false;
+        let typedText = new Typed('#respawnHoursText', {
+            strings: [`Respawns in <b>${hours} H<b>`, ''],
+            typeSpeed: 50,
+            backSpeed: 25,
+            onStringTyped: (arrayPos, self) => {
+                // Pause Typed
+                self.stop();
+                searchBar.addEventListener("input", () => { if (searchBar.value == '') { self.start(); } });
+                buttonContainer.addEventListener("click", () => { if (file !== currentMap) { self.start(); } });
+                clearButton.addEventListener("click", () => { self.start(); });
+            },
+            onComplete: (self) => {
+                // Destroy Typed instance once backspacing is done
+                self.destroy();
+                mayType = true;
+                timeToRespawnBox.style.display = 'none';
+                typed(currentMap);
+            },
+        });
+    }
 }
 e();
