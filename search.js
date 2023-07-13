@@ -2,6 +2,7 @@
 const searchBar = document.getElementById('searchBar');
 const buttonContainer = document.getElementById('buttonContainer');
 const clearButton = document.getElementById('clearButton');
+searchBar.focus();
 function search(obj) {
     function getAllValues(object) {
         for (let key in object) {
