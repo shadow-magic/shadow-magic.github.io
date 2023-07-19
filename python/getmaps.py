@@ -11,8 +11,8 @@ import time
 pyautogui.FAILSAFE = False
 stitcher = cv2.Stitcher.create()
 images = []
-dragDistanceX = -1500  # pans left
-dragDistanceY = -900  # pans down
+dragDistanceX = -1300  # pans left
+dragDistanceY = -950  # pans down
 chromeOptions = Options()
 chromeOptions.add_experimental_option("excludeSwitches", ["enable-automation"])
 driver = webdriver.Chrome(options=chromeOptions)
@@ -42,13 +42,13 @@ def pan(xoff, yoff=0):
     quotientY, remainderY = divmod(abs(yoff), 1080)
     startX = 1920
     startY = 1080
-    dragTime = 0.5
+    dragTime = 0.33
     sleepTime = 0.1
     xoffsign, yoffsign = -1, -1
     if xoff >= 0:
         startX = 0
         xoffsign = 1
-    if yoff >= 0:
+    if yoff > 0:
         startY = 0
         yoffsign = 1
     while quotientX > 0 or quotientY > 0 or remainderX != 0 or remainderY != 0:
@@ -70,10 +70,8 @@ def pan(xoff, yoff=0):
             pyautogui.mouseUp()
             quotientY -= 1
         elif quotientX > 0 and quotientY == 0:
-            print(startX, startY)
             pyautogui.moveTo(startX, startY)
             pyautogui.mouseDown()
-            print(startX + xoffsign * 1920, startY)
             pyautogui.moveTo(startX + xoffsign * 1920, startY, dragTime)
             time.sleep(sleepTime)
             pyautogui.mouseUp()
@@ -97,6 +95,16 @@ def screenshot_To_Cv():
     images.append(img)
 
 
+# get list items in mapSidebar
+markerGroups = driver.find_elements(
+    By.XPATH, '//*[@id="__next"]/div/div[1]/div[1]/div/div/div[1]/div/div'
+)
+print(spans)
+for span in spans:
+    print(span.text)
+# run for loop on list
+# for item in list:
+# click desired button
 # zoom in
 zoomIn.click()
 time.sleep(1)
@@ -105,21 +113,20 @@ zoomIn.click()
 driver.execute_script("arguments[0].style.display='none';", grayBox)
 driver.execute_script("arguments[0].style.display='none';", topNav)
 driver.execute_script("arguments[0].style.display='none';", zoomBox)
-# click desired button
+
 
 driver.execute_script("arguments[0].style.visibility='hidden';", mapSidebar)
 
 
 # move map to starting position
 time.sleep(1)
-pan(2460, 1200)
+pan(50, 1300)
 screenshot_To_Cv()
-# screenshot pan repeat - convert to for loops when finished
-for _ in range(3):
-    pan(dragDistanceX)
-    screenshot_To_Cv()  # 00 -> 03
+pan(dragDistanceX)
+screenshot_To_Cv()  # 03
 pan(0, dragDistanceY)
-screenshot_To_Cv()
+screenshot_To_Cv()  # 03
+# screenshot pan repeat - convert to for loops when finished
 for _ in range(3):
     pan(-1 * dragDistanceX)
     screenshot_To_Cv()  # 13 -> 10
@@ -128,20 +135,39 @@ screenshot_To_Cv()
 for _ in range(3):
     pan(dragDistanceX)
     screenshot_To_Cv()  # 20 -> 23
-pan(0, dragDistanceY)
-screenshot_To_Cv()
-for _ in range(3):
-    pan(-1 * dragDistanceX)
-    screenshot_To_Cv()  # 33 -> 30
-pan(0, dragDistanceY)
-screenshot_To_Cv()
-for _ in range(3):
-    pan(dragDistanceX)
-    screenshot_To_Cv()  # 40 -> 43
-pan(0, dragDistanceY)
-screenshot_To_Cv()
-time.sleep(1)
-driver.close()
-time.sleep(2)
+pan(3300, dragDistanceY)
+screenshot_To_Cv()  # 30
+pan(dragDistanceX)
+screenshot_To_Cv()  # 31
 status, stitched = stitcher.stitch(images)
-cv2.imwrite("python/maps/stitched.png", stitched)
+images = []
+# inazuma
+pan(-2700, 100)
+screenshot_To_Cv()
+pan(dragDistanceX)
+screenshot_To_Cv()
+pan(0, dragDistanceY)
+screenshot_To_Cv()
+pan(-1 * dragDistanceX)
+screenshot_To_Cv()
+pan(-700, -400)
+screenshot_To_Cv()
+pan(300, -500)
+screenshot_To_Cv()
+pan(0, -400)
+screenshot_To_Cv()
+status, stitched2 = stitcher.stitch(images)
+
+stitched_image_rgb = cv2.cvtColor(stitched, cv2.COLOR_BGR2RGB)
+stitched_image = Image.fromarray(stitched_image_rgb).convert("RGBA")
+
+stitched2_image_rgb = cv2.cvtColor(stitched2, cv2.COLOR_BGR2RGB)
+stitched2_image = Image.fromarray(stitched2_image_rgb).convert("RGBA")
+
+ocean = Image.open("python/blue.png")
+
+bg_image = Image.new("RGBA", (6767, 5117), (0, 0, 0, 255))
+bg_image.paste(stitched_image, (0, 0))
+bg_image.paste(stitched2_image, (3760, 2176))
+bg_image.paste(ocean, (0, 0), mask=ocean)
+bg_image.save("python/maps/combined.png")
