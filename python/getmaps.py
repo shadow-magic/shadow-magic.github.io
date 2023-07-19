@@ -99,9 +99,6 @@ def screenshot_To_Cv():
 markerGroups = driver.find_elements(
     By.XPATH, '//*[@id="__next"]/div/div[1]/div[1]/div/div/div[1]/div/div'
 )
-print(spans)
-for span in spans:
-    print(span.text)
 # run for loop on list
 # for item in list:
 # click desired button
