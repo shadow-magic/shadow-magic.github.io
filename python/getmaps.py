@@ -99,6 +99,7 @@ def screenshot_To_Cv():
 markerGroups = driver.find_elements(
     By.XPATH, '//*[@id="__next"]/div/div[1]/div[1]/div/div/div[1]/div/div'
 )
+time.sleep(5)
 # run for loop on list
 # for item in list:
 # click desired button
@@ -167,4 +168,5 @@ bg_image = Image.new("RGBA", (6767, 5117), (0, 0, 0, 255))
 bg_image.paste(stitched_image, (0, 0))
 bg_image.paste(stitched2_image, (3760, 2176))
 bg_image.paste(ocean, (0, 0), mask=ocean)
-bg_image.save("python/maps/combined.png")
+bg_image = bg_image.convert("RGB")
+bg_image.save("python/maps/combined.jpeg", "JPEG", optimize=True, quality=90)

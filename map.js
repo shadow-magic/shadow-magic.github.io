@@ -1,10 +1,10 @@
 //draws original layers if cookies exist. calls countdownOverlay()
 let map = L.map('map', {
-    crs: L.CRS.Simple
+    crs: L.CRS.Simple,
 });
 let timeToRespawnBox = document.getElementById('respawnHours');
 let currentMap = 'teyvat.png';
-const bounds = [[0, 0], [648, 790]];
+const bounds = [[0, 0], [511.7, 676.7]];
 const image = L.imageOverlay('/maps/teyvat.png', bounds).addTo(map);
 const drawnItems = new L.FeatureGroup().addTo(map);
 const drawControl = new L.Control.Draw({
@@ -20,6 +20,7 @@ const drawControl = new L.Control.Draw({
     }
 });
 map.fitBounds(bounds);
+map.setZoom(1);
 function switchMap(file) {
 
     currentMap = file;

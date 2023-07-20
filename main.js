@@ -46,6 +46,10 @@ function buttonClicked(e) {
         }
         typed(fileName);
     }
+    $('.headingContainer').fadeOut('slow', function () {
+        $(this).remove();
+    });
+    map.setZoom(2);
 }
 function emptiedSearch(obj) {
     switchMap('teyvat.png', '');
@@ -55,6 +59,7 @@ function emptiedSearch(obj) {
     drawnItems.clearLayers();
     deleteTimers();
     showVisited(obj);
+    map.setZoom(1);
 }
 function typed(file) {
     console.log(file, currentMap);
