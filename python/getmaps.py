@@ -80,14 +80,16 @@ def pan(xoff, yoff=0):
             remainderX, remainderY = 0, 0
 
 
-def screenshot_To_Cv(images):
+def screenshot_To_Cv():
+    global images
     image_stream = BytesIO(driver.get_screenshot_as_png())
     pil_image = Image.open(image_stream)
     img = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
     images.append(img)
 
 
-def screenshot(title, images):
+def screenshot(title):
+    global images
     time.sleep(1.7)  # wait for page to load
 
     mapSidebar = driver.find_element(
@@ -120,50 +122,51 @@ def screenshot(title, images):
     # move map to starting position
     time.sleep(1)
     pan(50, 1300)
-    screenshot_To_Cv(images)
+    print(len(images))
+    screenshot_To_Cv()
     pan(dragDistanceX)
-    screenshot_To_Cv(images)  # 03
+    screenshot_To_Cv()  # 03
     pan(0, dragDistanceY)
-    screenshot_To_Cv(images)  # 03
+    screenshot_To_Cv()  # 03
     # screenshot pan repeat - convert to for loops when finished
     for _ in range(3):
         pan(-1 * dragDistanceX)
-        screenshot_To_Cv(images)  # 13 -> 10
+        screenshot_To_Cv()  # 13 -> 10
     pan(0, dragDistanceY)
-    screenshot_To_Cv(images)
+    screenshot_To_Cv()
     for _ in range(3):
         pan(dragDistanceX)
-        screenshot_To_Cv(images)  # 20 -> 23
+        screenshot_To_Cv()  # 20 -> 23
     pan(3300, dragDistanceY)
-    screenshot_To_Cv(images)  # 30
+    screenshot_To_Cv()  # 30
     pan(dragDistanceX)
-    screenshot_To_Cv(images)  # 31
+    screenshot_To_Cv()  # 31
     status, stitched = stitcher.stitch(images)
     images = []
     # inazuma
     pan(-2700, 100)
-    screenshot_To_Cv(images)
+    screenshot_To_Cv()
     pan(dragDistanceX)
-    screenshot_To_Cv(images)
+    screenshot_To_Cv()
     pan(0, dragDistanceY)
-    screenshot_To_Cv(images)
+    screenshot_To_Cv()
     pan(-1 * dragDistanceX)
-    screenshot_To_Cv(images)
+    screenshot_To_Cv()
     pan(-700, -400)
-    screenshot_To_Cv(images)
+    screenshot_To_Cv()
     pan(300, -500)
-    screenshot_To_Cv(images)
+    screenshot_To_Cv()
     pan(0, -400)
-    screenshot_To_Cv(images)
+    screenshot_To_Cv()
     status, stitched2 = stitcher.stitch(images)
-
+    images = []
     stitched_image_rgb = cv2.cvtColor(stitched, cv2.COLOR_BGR2RGB)
     stitched_image = Image.fromarray(stitched_image_rgb).convert("RGBA")
 
     stitched2_image_rgb = cv2.cvtColor(stitched2, cv2.COLOR_BGR2RGB)
     stitched2_image = Image.fromarray(stitched2_image_rgb).convert("RGBA")
 
-    ocean = Image.open("python/blue.png")
+    ocean = Image.open("python/mask.png")
 
     bg_image = Image.new("RGBA", (6767, 5117), (0, 0, 0, 255))
     bg_image.paste(stitched_image, (0, 0))
@@ -194,6 +197,6 @@ for mGs in range(13):
                 f".MarkerGroup:nth-of-type({mGs+2}) div.MuiBox-root button:nth-child({button+1})",
             )
             btn.click()
-            screenshot(btn.get_attribute("title"), images)
+            screenshot(btn.get_attribute("title"))
             driver.refresh()
 driver.close()
