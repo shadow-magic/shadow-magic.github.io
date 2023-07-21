@@ -122,17 +122,18 @@ def screenshot(title):
     # move map to starting position
     time.sleep(1)
     pan(50, 1300)
-    print(len(images))
     screenshot_To_Cv()
     pan(dragDistanceX)
     screenshot_To_Cv()  # 03
     pan(0, dragDistanceY)
     screenshot_To_Cv()  # 03
     # screenshot pan repeat - convert to for loops when finished
-    for _ in range(3):
+    for _ in range(2):
         pan(-1 * dragDistanceX)
         screenshot_To_Cv()  # 13 -> 10
-    pan(0, dragDistanceY)
+    pan(-1 * dragDistanceX - 200)
+    screenshot_To_Cv()
+    pan(200, dragDistanceY)
     screenshot_To_Cv()
     for _ in range(3):
         pan(dragDistanceX)
