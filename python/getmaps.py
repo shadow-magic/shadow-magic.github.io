@@ -17,23 +17,15 @@ chromeOptions = Options()
 chromeOptions.add_experimental_option("excludeSwitches", ["enable-automation"])
 driver = webdriver.Chrome(options=chromeOptions)
 driver.get("https://genshin-impact-map.appsample.com/")
-driver.fullscreen_window()
-time.sleep(1.7)  # wait for page to load
-mapSidebar = driver.find_element(
-    By.CSS_SELECTOR,
-    "#__next > div > div.MapLayout_Sidebar",
-)
-topNav = driver.find_element(
-    By.CSS_SELECTOR, "#__next > div > div.TopNav.fixed.hide-on-phone"
-)
-grayBox = driver.find_element(By.CSS_SELECTOR, "#__next > div > div.MapLayout_0426")
-zoomBox = driver.find_element(
-    By.CSS_SELECTOR, "#mapDiv > div:nth-child(1) > div > div:nth-child(12) > div > div"
-)
-zoomIn = driver.find_element(
-    By.CSS_SELECTOR,
-    "#mapDiv > div:nth-child(1) > div > div:nth-child(12) > div > div > div > button:nth-child(1)",
-)
+driver.delete_all_cookies()
+btns = [
+    driver.find_element(By.CSS_SELECTOR, '[data-testid="btn-o403"]'),
+    driver.find_element(By.CSS_SELECTOR, '[data-testid="btn-o5"]'),
+    driver.find_element(By.CSS_SELECTOR, '[data-testid="btn-o6"]'),
+    driver.find_element(By.CSS_SELECTOR, '[data-testid="btn-o3"]'),
+]
+for button in btns:
+    button.click()
 
 
 def pan(xoff, yoff=0):
@@ -88,85 +80,120 @@ def pan(xoff, yoff=0):
             remainderX, remainderY = 0, 0
 
 
-def screenshot_To_Cv():
+def screenshot_To_Cv(images):
     image_stream = BytesIO(driver.get_screenshot_as_png())
     pil_image = Image.open(image_stream)
     img = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
     images.append(img)
 
 
-# get list items in mapSidebar
-markerGroups = driver.find_elements(
-    By.XPATH, '//*[@id="__next"]/div/div[1]/div[1]/div/div/div[1]/div/div'
-)
-time.sleep(5)
-# run for loop on list
-# for item in list:
-# click desired button
-# zoom in
-zoomIn.click()
-time.sleep(1)
-zoomIn.click()
-# delete unnecessary elements
-driver.execute_script("arguments[0].style.display='none';", grayBox)
-driver.execute_script("arguments[0].style.display='none';", topNav)
-driver.execute_script("arguments[0].style.display='none';", zoomBox)
+def screenshot(title, images):
+    time.sleep(1.7)  # wait for page to load
 
+    mapSidebar = driver.find_element(
+        By.CSS_SELECTOR,
+        "#__next > div > div.MapLayout_Sidebar",
+    )
+    topNav = driver.find_element(
+        By.CSS_SELECTOR, "#__next > div > div.TopNav.fixed.hide-on-phone"
+    )
+    grayBox = driver.find_element(By.CSS_SELECTOR, "#__next > div > div.MapLayout_0426")
+    zoomBox = driver.find_element(
+        By.CSS_SELECTOR,
+        "#mapDiv > div:nth-child(1) > div > div:nth-child(12) > div > div",
+    )
+    zoomIn = driver.find_element(
+        By.CSS_SELECTOR,
+        "#mapDiv > div:nth-child(1) > div > div:nth-child(12) > div > div > div > button:nth-child(1)",
+    )
 
-driver.execute_script("arguments[0].style.visibility='hidden';", mapSidebar)
+    # zoom in
+    zoomIn.click()
+    time.sleep(1)
+    zoomIn.click()
+    # delete unnecessary elements
+    driver.execute_script("arguments[0].style.display='none';", grayBox)
+    driver.execute_script("arguments[0].style.display='none';", topNav)
+    driver.execute_script("arguments[0].style.display='none';", zoomBox)
+    driver.execute_script("arguments[0].style.visibility='hidden';", mapSidebar)
 
-
-# move map to starting position
-time.sleep(1)
-pan(50, 1300)
-screenshot_To_Cv()
-pan(dragDistanceX)
-screenshot_To_Cv()  # 03
-pan(0, dragDistanceY)
-screenshot_To_Cv()  # 03
-# screenshot pan repeat - convert to for loops when finished
-for _ in range(3):
-    pan(-1 * dragDistanceX)
-    screenshot_To_Cv()  # 13 -> 10
-pan(0, dragDistanceY)
-screenshot_To_Cv()
-for _ in range(3):
+    # move map to starting position
+    time.sleep(1)
+    pan(50, 1300)
+    screenshot_To_Cv(images)
     pan(dragDistanceX)
-    screenshot_To_Cv()  # 20 -> 23
-pan(3300, dragDistanceY)
-screenshot_To_Cv()  # 30
-pan(dragDistanceX)
-screenshot_To_Cv()  # 31
-status, stitched = stitcher.stitch(images)
-images = []
-# inazuma
-pan(-2700, 100)
-screenshot_To_Cv()
-pan(dragDistanceX)
-screenshot_To_Cv()
-pan(0, dragDistanceY)
-screenshot_To_Cv()
-pan(-1 * dragDistanceX)
-screenshot_To_Cv()
-pan(-700, -400)
-screenshot_To_Cv()
-pan(300, -500)
-screenshot_To_Cv()
-pan(0, -400)
-screenshot_To_Cv()
-status, stitched2 = stitcher.stitch(images)
+    screenshot_To_Cv(images)  # 03
+    pan(0, dragDistanceY)
+    screenshot_To_Cv(images)  # 03
+    # screenshot pan repeat - convert to for loops when finished
+    for _ in range(3):
+        pan(-1 * dragDistanceX)
+        screenshot_To_Cv(images)  # 13 -> 10
+    pan(0, dragDistanceY)
+    screenshot_To_Cv(images)
+    for _ in range(3):
+        pan(dragDistanceX)
+        screenshot_To_Cv(images)  # 20 -> 23
+    pan(3300, dragDistanceY)
+    screenshot_To_Cv(images)  # 30
+    pan(dragDistanceX)
+    screenshot_To_Cv(images)  # 31
+    status, stitched = stitcher.stitch(images)
+    images = []
+    # inazuma
+    pan(-2700, 100)
+    screenshot_To_Cv(images)
+    pan(dragDistanceX)
+    screenshot_To_Cv(images)
+    pan(0, dragDistanceY)
+    screenshot_To_Cv(images)
+    pan(-1 * dragDistanceX)
+    screenshot_To_Cv(images)
+    pan(-700, -400)
+    screenshot_To_Cv(images)
+    pan(300, -500)
+    screenshot_To_Cv(images)
+    pan(0, -400)
+    screenshot_To_Cv(images)
+    status, stitched2 = stitcher.stitch(images)
 
-stitched_image_rgb = cv2.cvtColor(stitched, cv2.COLOR_BGR2RGB)
-stitched_image = Image.fromarray(stitched_image_rgb).convert("RGBA")
+    stitched_image_rgb = cv2.cvtColor(stitched, cv2.COLOR_BGR2RGB)
+    stitched_image = Image.fromarray(stitched_image_rgb).convert("RGBA")
 
-stitched2_image_rgb = cv2.cvtColor(stitched2, cv2.COLOR_BGR2RGB)
-stitched2_image = Image.fromarray(stitched2_image_rgb).convert("RGBA")
+    stitched2_image_rgb = cv2.cvtColor(stitched2, cv2.COLOR_BGR2RGB)
+    stitched2_image = Image.fromarray(stitched2_image_rgb).convert("RGBA")
 
-ocean = Image.open("python/blue.png")
+    ocean = Image.open("python/blue.png")
 
-bg_image = Image.new("RGBA", (6767, 5117), (0, 0, 0, 255))
-bg_image.paste(stitched_image, (0, 0))
-bg_image.paste(stitched2_image, (3760, 2176))
-bg_image.paste(ocean, (0, 0), mask=ocean)
-bg_image = bg_image.convert("RGB")
-bg_image.save("python/maps/combined.jpeg", "JPEG", optimize=True, quality=90)
+    bg_image = Image.new("RGBA", (6767, 5117), (0, 0, 0, 255))
+    bg_image.paste(stitched_image, (0, 0))
+    bg_image.paste(stitched2_image, (3760, 2176))
+    bg_image.paste(ocean, (0, 0), mask=ocean)
+    bg_image = bg_image.convert("RGB")
+    bg_image.save(f"python/maps/{title}.jpeg", "JPEG", optimize=True, quality=90)
+
+
+# get list items in mapSidebar
+
+for mGs in range(13):
+    if mGs not in (0, 2, 3, 6, 7):
+        markerGroups = driver.find_elements(By.CSS_SELECTOR, ".MarkerGroup")
+        buttons = markerGroups[mGs].find_elements(
+            By.CSS_SELECTOR, "div.MuiBox-root button"
+        )
+        lenButtons = len(buttons)
+        for button in range(lenButtons):
+            driver.fullscreen_window()
+            if button > 0:
+                driver.find_element(
+                    By.CSS_SELECTOR,
+                    f".MarkerGroup:nth-of-type({mGs+2}) div.MuiBox-root button:nth-child({button})",
+                ).click()
+            btn = driver.find_element(
+                By.CSS_SELECTOR,
+                f".MarkerGroup:nth-of-type({mGs+2}) div.MuiBox-root button:nth-child({button+1})",
+            )
+            btn.click()
+            screenshot(btn.get_attribute("title"), images)
+            driver.refresh()
+driver.close()
