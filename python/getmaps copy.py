@@ -7,18 +7,10 @@ import cv2
 import numpy as np
 import pyautogui
 import time
-import os
-
-files = []
-for file in os.listdir("python/maps"):
-    file = file.replace("\xa0", " ")
-    file = os.path.splitext(file)[0]
-    files.append(file)
 
 pyautogui.FAILSAFE = False
 stitcher = cv2.Stitcher.create()
 images = []
-btnClicked = False
 dragDistanceX = -1300  # pans left
 dragDistanceY = -950  # pans down
 chromeOptions = Options()
@@ -96,8 +88,8 @@ def screenshot_To_Cv():
     images.append(img)
 
 
-def screenshot(title):
-    global images
+def setupPage():
+    driver.fullscreen_window()
     time.sleep(1.7)  # wait for page to load
 
     mapSidebar = driver.find_element(
@@ -127,8 +119,8 @@ def screenshot(title):
     driver.execute_script("arguments[0].style.display='none';", zoomBox)
     driver.execute_script("arguments[0].style.visibility='hidden';", mapSidebar)
 
-    # move map to starting position
-    time.sleep(1)
+
+def firstSS():
     pan(50, 1300)
     screenshot_To_Cv()
     pan(dragDistanceX)
@@ -150,7 +142,23 @@ def screenshot(title):
     screenshot_To_Cv()  # 30
     pan(dragDistanceX)
     screenshot_To_Cv()  # 31
-    status, stitched = stitcher.stitch(images)
+
+
+def screenshot(title):
+    global images
+    setupPage()
+    firstSS()
+    # move map to starting position
+    time.sleep(1)
+    for _ in range(3):
+        status, stitched = stitcher.stitch(images)
+        if status == cv2.Stitcher_OK:
+            break
+        else:
+            print(f"first screenshot failed:{title}")
+            driver.refresh()
+            setupPage()
+            firstSS()
     images = []
     # inazuma
     pan(-2700, 100)
@@ -186,7 +194,7 @@ def screenshot(title):
 
 
 # get list items in mapSidebar
-problemButtons = ["Exquisite Chest"]
+problemButtons = ["Precious Chest"]
 for mGs in range(13):
     if mGs not in (0, 2, 3, 6, 7):
         markerGroups = driver.find_elements(By.CSS_SELECTOR, ".MarkerGroup")
@@ -195,23 +203,20 @@ for mGs in range(13):
         )
         lenButtons = len(buttons)
         for button in range(lenButtons):
-            driver.fullscreen_window()
             btn = driver.find_element(
                 By.CSS_SELECTOR,
                 f".MarkerGroup:nth-of-type({mGs+2}) div.MuiBox-root button:nth-child({button+1})",
             )
             btnTitle = btn.get_attribute("title")
-            print(btnTitle, files, problemButtons)
-            if btnTitle in files or btnTitle in problemButtons:
-                print("skipping")  # ?????????????
+            if btnTitle in problemButtons:
                 continue
-            if button > 0 and btnClicked:
+            if button > 0:
                 driver.find_element(
                     By.CSS_SELECTOR,
                     f".MarkerGroup:nth-of-type({mGs+2}) div.MuiBox-root button:nth-child({button})",
                 ).click()
+
             btn.click()
-            btnClicked = True
             screenshot(btnTitle)
             driver.refresh()
 driver.close()
