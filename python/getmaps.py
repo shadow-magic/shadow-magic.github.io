@@ -186,7 +186,7 @@ def screenshot(title):
 
 
 # get list items in mapSidebar
-problemButtons = ["Exquisite Chest"]
+problemButtons = ["Precious Chest"]
 for mGs in range(13):
     if mGs not in (0, 2, 3, 6, 7):
         markerGroups = driver.find_elements(By.CSS_SELECTOR, ".MarkerGroup")
@@ -200,10 +200,8 @@ for mGs in range(13):
                 By.CSS_SELECTOR,
                 f".MarkerGroup:nth-of-type({mGs+2}) div.MuiBox-root button:nth-child({button+1})",
             )
-            btnTitle = btn.get_attribute("title")
-            print(btnTitle, files, problemButtons)
+            btnTitle = btn.get_attribute("title").replace("\xa0", " ")
             if btnTitle in files or btnTitle in problemButtons:
-                print("skipping")  # ?????????????
                 continue
             if button > 0 and btnClicked:
                 driver.find_element(

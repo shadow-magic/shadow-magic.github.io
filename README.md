@@ -7,5 +7,6 @@
 - [X] Add hours remaining overlay with typing animation
 - [ ] Add more maps
 - [ ] Add animations and clean up CSS
-- [ ] Fix empty image error in stitched rgb conversion by rerunning function and/or increasing image overlap
+- [ ] Update opencv stitch configuration or switch to Hugin API (opencv stitch failing more often than it works)
+- [ ] Add retries and concurrent futures if above item remedies issue
 - [X] Add remember visited buttons
